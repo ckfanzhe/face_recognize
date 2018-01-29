@@ -44,7 +44,6 @@ camera = cv2.VideoCapture(video_dir)  # 打开摄像头 参数为输入流，可
 index = 1
 while True:
     if index <= pic_num:
-        print('Being processed picture %s' % index)
         # 从视频流中读取照片
         success, img = camera.read()
         # 转为灰度图片
@@ -53,7 +52,7 @@ while True:
         dets = detector(gray_img, 1)
         # 当且仅当检测到人脸的时候才进行位置判断，保存等操作
         if len(dets) >= 1:
-            print("{} faces detected".format(len(dets)))  # 打印出检测到的人脸数
+            print('Being processed picture {},{} faces dectected!'.format(index, len(dets))
             for i, d in enumerate(dets):
                 x1 = d.top() if d.top() > 0 else 0
                 y1 = d.bottom() if d.bottom() > 0 else 0
