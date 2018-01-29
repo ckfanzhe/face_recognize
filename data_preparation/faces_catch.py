@@ -53,21 +53,23 @@ while True:
         dets = detector(gray_img, 1)
         if len(dets) >= 1:
             print("{} faces detected".format(len(dets)))  # 打印出检测到的人脸数
-        for i, d in enumerate(dets):
-            x1 = d.top() if d.top() > 0 else 0
-            y1 = d.bottom() if d.bottom() > 0 else 0
-            x2 = d.left() if d.left() > 0 else 0
-            y2 = d.right() if d.right() > 0 else 0
-            face = img[x1:y1, x2:y2]   # 定位并剪出人脸
+            for i, d in enumerate(dets):
+                x1 = d.top() if d.top() > 0 else 0
+                y1 = d.bottom() if d.bottom() > 0 else 0
+                x2 = d.left() if d.left() > 0 else 0
+                y2 = d.right() if d.right() > 0 else 0
+                face = img[x1:y1, x2:y2]   # 定位并剪出人脸
 
-            # 调整图片的对比度与亮度， 对比度与亮度值都取随机数，这样能增加样本的多样性
-            face = relight(face, random.uniform(0.7, 1.3), random.randint(-20, 20))
-            face = cv2.resize(face, (size, size))  # 将图片改成特定分辨率
-            cv2.imshow('Face', face)
-            cv2.imwrite(output_dir+'/'+str(index)+'.jpg', face)
-            index += 1  # 循环pic_num次
-        if cv2.waitKey(1) & 0xFF == ord('q'):  # 按q键中断
-            break
+                # 调整图片的对比度与亮度， 对比度与亮度值都取随机数，这样能增加样本的多样性
+                face = relight(face, random.uniform(0.7, 1.3), random.randint(-20, 20))
+                face = cv2.resize(face, (size, size))  # 将图片改成特定分辨率
+                cv2.imshow('Face', face)
+                cv2.imwrite(output_dir+'/'+str(index)+'.jpg', face)
+                index += 1  # 循环pic_num次
+            if cv2.waitKey(1) & 0xFF == ord('q'):  # 按q键中断
+                break
+        else:
+            print('No face detected!')
     else:
         print('Finished!')
         break
