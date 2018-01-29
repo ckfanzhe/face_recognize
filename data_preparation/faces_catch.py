@@ -51,6 +51,7 @@ while True:
         gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         # 使用detector进行人脸检测
         dets = detector(gray_img, 1)
+        # 当且仅当检测到人脸的时候才进行位置判断，保存等操作
         if len(dets) >= 1:
             print("{} faces detected".format(len(dets)))  # 打印出检测到的人脸数
             for i, d in enumerate(dets):
