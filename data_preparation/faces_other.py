@@ -7,7 +7,7 @@ import dlib
 # 下载 lfw.tgz 并解压所有文件到../input_img
 
 input_dir = '../data/input_img'
-output_dir = '../data/other_faces_128'
+output_dir = '../data/other_faces_64'
 pic_num = 2000
 size = 64
 
