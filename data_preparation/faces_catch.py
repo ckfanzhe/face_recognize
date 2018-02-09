@@ -46,7 +46,7 @@ while True:
     if index <= pic_num:
         # 从视频流中读取照片
         success, img = camera.read()
-        # 转为灰度图片
+        # 图像灰化，降低计算复杂度
         gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         # 使用detector进行人脸检测
         dets = detector(gray_img, 1)
