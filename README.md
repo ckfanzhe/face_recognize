@@ -7,3 +7,5 @@
 |data_preparation/README.md|对上述两个文件的代码说明(markdown说明文件)|
 |image_operate.py|对传入神经网络的数据进行预处理(源代码)|
 |image_operate.md|对image_operate.py的代码说明(markdown说明文件)|
+|model.py|卷积神经网络的模型(源代码)|
+|model.md|对卷积神经网络模型的说明(markdown说明文件)|
