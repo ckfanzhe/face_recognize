@@ -23,7 +23,7 @@
 
 **下面介绍一下卷积`con2d()`池化`max_pooling()`函数的使用方法：**
 
-###卷积函数：
+### 卷积函数：
 
 ```python
 tf.nn.conv2d(input, filter, strides, padding, use_cudnn_on_gpu=None, name=None)
@@ -44,7 +44,7 @@ tf.nn.conv2d(input, filter, strides, padding, use_cudnn_on_gpu=None, name=None)
 **use_cudnn_on_gpu:**
 >bool类型的数据，表示是否使用cudnn加速(GPU加速)，默认为True
 
-###池化函数
+### 池化函数
 
 ```python
 tf.nn.max_pool_with_argmax(input, ksize, strides, padding ,Targmax=None, name=None)
@@ -61,7 +61,7 @@ tf.nn.max_pool_with_argmax(input, ksize, strides, padding ,Targmax=None, name=No
 **padding:**
 >窗口在进行池化操作时的跨度，和卷积操作类似，也是bool类型的值，有‘SAME’，‘VALID’两种不同的池化方式，可参见上面对卷积函数中Padding参数的解释。
 
-###下面是对Model.py中其他定义函数的作用的解释:
+### 下面是对Model.py中其他定义函数的作用的解释:
 
 ```python
 def loss(logits, labels):
