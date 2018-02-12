@@ -71,19 +71,23 @@ def loss(logits, labels):
     tf.summary.scalar('Loss', losses)
     return losses
 ```
+
 代码构建的`loss()`函数用于计算数据经过神经网络后产生的误差(**后续的优化就是用优化算法改变神经网络中各个激活函数的参数来达到减少此函数所返回的误差**)传入数据是神经网络`inference()`最后softmax层返回结果(**一个列表，其中包含两个数值，分别代表传入数据是类别一还是类别二的概率**)，下面介绍`loss()`函数中所用tensorflow函数：
 
 ```python
 cross_entropy = tf.nn.sparse_softmax_cross_entropy_with_logits(logits=logits, labels=labels,name='c_entropy_per_example')
 
 ```
+
     第一个参数logits：就是神经网络最后一层的输出，如果有batch的话，它的大小就是[batch_size，num_classes]，单样本的话，大小就是num_classes
     第二个参数labels：标记着真确结果的标签，大小同上
     函数的意义是对softmax的输出向量[y1,y2,y3...]和样本的正确的标签做一个交叉熵(判断两个分布的相似性)它与tf.nn.softmax_cross_entropy_with_logits()函数的区别就是，它会对样本标签的稀疏表示(独热码)，因为图片标签通常是稀疏的，故本例函数用的要较多一些
+
 ```python
 losses = tf.reduce_mean(cross_entropy, name='loss')
 tf.summary.scalar('Loss', losses)
 ```
+
     因为tf.nn.sparse_softmax_cross_entropy_with_logits()函数返回的是一个向量，故还需要使用tf.reduce_mean()函数进行求和的平均操作，最终的tf.summary.scalar()函数是对loss数据进行汇总，方便用tensorboard进行查看
 
 ```python
