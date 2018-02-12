@@ -9,3 +9,5 @@
 |image_operate.md|对image_operate.py的代码说明(markdown说明文件)|
 |model.py|卷积神经网络的模型(源代码)|
 |model.md|对卷积神经网络模型的说明(markdown说明文件)|
+|model_train.py|对模型进行训练(源代码)|
+|model_train.md|对模型训练代码的解释(markdown说明文件)|
