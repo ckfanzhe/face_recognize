@@ -11,13 +11,13 @@
 
 |layer|size-in|size-out|kernel|
 |:-:|:-:|:-:|:-:|
-|conv_1|64*64*3|64*64*32|3*3*3|
-|max_pooling_1|64*64*32|32*32*32|2*2*32|
-|conv_2|32*32*32|32*32*64|3*3*32|
-|max_pooling_2|32*32*64|32*32*64|1*1*32|
-|conv_3|32*32*64|32*32*64|3*3*64|
-|max_pooling_3|32*32*64|32*32*64|1*1*32|
-|full_connection_1|32*32*64|128||
+|conv_1|64 * 64 * 3|64 * 64 * 32|3 * 3 * 3|
+|max_pooling_1|64 * 64 * 32|32 * 32 * 32|2 * 2 * 32|
+|conv_2|32 * 32 * 32|32 * 32 * 64|3 * 3 * 32|
+|max_pooling_2|32 * 32 * 64|32 * 32 * 64|1 * 1 * 32|
+|conv_3|32 * 32 * 64|32 * 32 * 64|3 * 3 * 64|
+|max_pooling_3|32 * 32 * 64|32 * 32 * 64|1 * 1 * 32|
+|full_connection_1|32 * 32 * 64|128||
 |full_connection_2|128|128||
 |softmax_linear|128|2||
 
@@ -71,20 +71,26 @@ def loss(logits, labels):
     tf.summary.scalar('Loss', losses)
     return losses
 ```
+
 代码构建的`loss()`函数用于计算数据经过神经网络后产生的误差(**后续的优化就是用优化算法改变神经网络中各个激活函数的参数来达到减少此函数所返回的误差**)传入数据是神经网络`inference()`最后softmax层返回结果(**一个列表，其中包含两个数值，分别代表传入数据是类别一还是类别二的概率**)，下面介绍`loss()`函数中所用tensorflow函数：
 
 ```python
 cross_entropy = tf.nn.sparse_softmax_cross_entropy_with_logits(logits=logits, labels=labels,name='c_entropy_per_example')
-
 ```
-    第一个参数logits：就是神经网络最后一层的输出，如果有batch的话，它的大小就是[batch_size，num_classes]，单样本的话，大小就是num_classes
-    第二个参数labels：标记着真确结果的标签，大小同上
-    函数的意义是对softmax的输出向量[y1,y2,y3...]和样本的正确的标签做一个交叉熵(判断两个分布的相似性)它与tf.nn.softmax_cross_entropy_with_logits()函数的区别就是，它会对样本标签的稀疏表示(独热码)，因为图片标签通常是稀疏的，故本例函数用的要较多一些
+
+第一个参数logits：就是神经网络最后一层的输出，如果有batch的话，它的大小就是[batch_size，num_classes]，单样本的话，大小就是num_classes
+第二个参数labels：标记着真确结果的标签，大小同上
+函数的意义是对softmax的输出向量[y1,y2,y3...]和样本的正确的标签做一个交叉熵(判断两个分布的相似性)它与tf.nn.softmax_cross_entropy_with_logits()函数的区别就是，它会对样本标签的稀疏表示(独热码)，因为图片标签通常是稀疏的，故本例函数用的要较多一些
+
+
 ```python
 losses = tf.reduce_mean(cross_entropy, name='loss')
 tf.summary.scalar('Loss', losses)
 ```
-    因为tf.nn.sparse_softmax_cross_entropy_with_logits()函数返回的是一个向量，故还需要使用tf.reduce_mean()函数进行求和的平均操作，最终的tf.summary.scalar()函数是对loss数据进行汇总，方便用tensorboard进行查看
+
+
+因为tf.nn.sparse_softmax_cross_entropy_with_logits()函数返回的是一个向量，故还需要使用tf.reduce_mean()函数进行求和的平均操作，最终的tf.summary.scalar()函数是对loss数据进行汇总，方便用tensorboard进行查看
+
 
 ```python
 def training(loss, learning_rate):
@@ -93,6 +99,7 @@ def training(loss, learning_rate):
         train_op = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(loss, global_step=global_step)
     return train_op
 ```
+
 
 代码构建的`training()`函数用于对最终误差的优化，当神经网络返回与正确标签相反的结果，即错误结果时，会导致交叉熵的变大，而本例所用的Adam优化算法，可以找到全局最优解，然后根据最优解反向传播修改神经网络中的参数，使其能返回正确的结果；函数中声明的全局计数变量global_step用于记下训练的步数，其中的传入的参数learning_rate表示`学习速率`，即在进行优化求导的时候每一步的大小
 
@@ -105,15 +112,20 @@ def evaluation(logits, labels):
     tf.summary.scalar('Accuracy', accuracy)
     return accuracy
 ```
+
+
 代码构建的`evaluation()`函数的作用就是对结果的评估；其中主要作用函数是`tf.nn.in_top_k()` 下面是对函数的简单介绍：
+
 
 ```python
 in_top_k(predictions, targets, k, name=None)
 ```
+
     函数有如下参数:
     predictions：预测的结果
     targets：标有真确结果的标签，大小为样本数
     k：每个样本的预测结果的前k个最大的数里面是否包含targets预测中的标签，一般都是取1，即取预测最大概率的索引与标签对比
+
 **函数使用的示例:**
 ```python
 import tensorflow as tf
@@ -141,6 +153,7 @@ in_top_k()函数的返回值:
  [ 1.  0.  1.]
 对三张图片判断的准确率为：
  0.6665
+ '''
 ```
 
 在示例中，我们假设传入了神经网络`inference()`三张图片，这三张图片都是属于类别二的(标签为1)，然后经过神经网络的运算，输出了一个**预测列表[[0, 1], [1, 0], [0, 1]]** (在这里我假设神经网络能100%确定输入的图片是哪一类)，然后将这个输出结果当作predictions参数，图片的正确**分类标签[1, 1, 1]**当作target参数，一并输入到`in_top_k()`函数中，函数会返回一个判断结果的列表，如果传入的三张图片正好是能认为是第二类别，那么将会返回三个true ，因为第二张图神经网络判断错误，故返回了一个false,这时用`tf.cast()`函数强制将bool类型的值转换为tf.float16的浮点小数值，再用`tf.reduce_mean()`对此向量进行求平均值，就可以得出神经网络的对图片判断的正确率了。
