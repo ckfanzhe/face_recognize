@@ -76,12 +76,11 @@ def loss(logits, labels):
 
 ```python
 cross_entropy = tf.nn.sparse_softmax_cross_entropy_with_logits(logits=logits, labels=labels,name='c_entropy_per_example')
-
 ```
 
-    第一个参数logits：就是神经网络最后一层的输出，如果有batch的话，它的大小就是[batch_size，num_classes]，单样本的话，大小就是num_classes
-    第二个参数labels：标记着真确结果的标签，大小同上
-    函数的意义是对softmax的输出向量[y1,y2,y3...]和样本的正确的标签做一个交叉熵(判断两个分布的相似性)它与tf.nn.softmax_cross_entropy_with_logits()函数的区别就是，它会对样本标签的稀疏表示(独热码)，因为图片标签通常是稀疏的，故本例函数用的要较多一些
+第一个参数logits：就是神经网络最后一层的输出，如果有batch的话，它的大小就是[batch_size，num_classes]，单样本的话，大小就是num_classes
+第二个参数labels：标记着真确结果的标签，大小同上
+函数的意义是对softmax的输出向量[y1,y2,y3...]和样本的正确的标签做一个交叉熵(判断两个分布的相似性)它与tf.nn.softmax_cross_entropy_with_logits()函数的区别就是，它会对样本标签的稀疏表示(独热码)，因为图片标签通常是稀疏的，故本例函数用的要较多一些
 
 
 ```python
