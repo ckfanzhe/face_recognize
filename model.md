@@ -89,7 +89,7 @@ tf.summary.scalar('Loss', losses)
 ```
 
 
-    因为tf.nn.sparse_softmax_cross_entropy_with_logits()函数返回的是一个向量，故还需要使用tf.reduce_mean()函数进行求和的平均操作，最终的tf.summary.scalar()函数是对loss数据进行汇总，方便用tensorboard进行查看
+因为tf.nn.sparse_softmax_cross_entropy_with_logits()函数返回的是一个向量，故还需要使用tf.reduce_mean()函数进行求和的平均操作，最终的tf.summary.scalar()函数是对loss数据进行汇总，方便用tensorboard进行查看
 
 
 ```python
