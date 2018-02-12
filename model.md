@@ -81,14 +81,17 @@ cross_entropy = tf.nn.sparse_softmax_cross_entropy_with_logits(logits=logits, la
 
     第一个参数logits：就是神经网络最后一层的输出，如果有batch的话，它的大小就是[batch_size，num_classes]，单样本的话，大小就是num_classes
     第二个参数labels：标记着真确结果的标签，大小同上
-    函数的意义是对softmax的输出向量[y1,y2,y3...]和样本的正确的标签做一个交叉熵(判断两个分布的相似性)它与tf.nn.softmax_cross_entropy_with_logits()函数的区别就是，它会对样本标签的稀疏表示(独热码)，因为图片标签通常是稀疏的，故本例函数用的要较多一些
+    函数的意义是对softmax的输出向量[y1,y2,y3...]和样本的正确的标签做一个交叉熵(判断两个分布的相似性)它与tf.nn.softmax_cross_entropy_with_logits()函数的区别就是，它会对样本标签的稀疏表示(独热码)，因为图片标签通常是稀疏的，故本例函数用的要较多一些
+
 
 ```python
 losses = tf.reduce_mean(cross_entropy, name='loss')
 tf.summary.scalar('Loss', losses)
 ```
 
+
     因为tf.nn.sparse_softmax_cross_entropy_with_logits()函数返回的是一个向量，故还需要使用tf.reduce_mean()函数进行求和的平均操作，最终的tf.summary.scalar()函数是对loss数据进行汇总，方便用tensorboard进行查看
+
 
 ```python
 def training(loss, learning_rate):
@@ -97,6 +100,7 @@ def training(loss, learning_rate):
         train_op = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(loss, global_step=global_step)
     return train_op
 ```
+
 
 代码构建的`training()`函数用于对最终误差的优化，当神经网络返回与正确标签相反的结果，即错误结果时，会导致交叉熵的变大，而本例所用的Adam优化算法，可以找到全局最优解，然后根据最优解反向传播修改神经网络中的参数，使其能返回正确的结果；函数中声明的全局计数变量global_step用于记下训练的步数，其中的传入的参数learning_rate表示`学习速率`，即在进行优化求导的时候每一步的大小
 
@@ -109,15 +113,20 @@ def evaluation(logits, labels):
     tf.summary.scalar('Accuracy', accuracy)
     return accuracy
 ```
+
+
 代码构建的`evaluation()`函数的作用就是对结果的评估；其中主要作用函数是`tf.nn.in_top_k()` 下面是对函数的简单介绍：
+
 
 ```python
 in_top_k(predictions, targets, k, name=None)
 ```
+
     函数有如下参数:
     predictions：预测的结果
     targets：标有真确结果的标签，大小为样本数
     k：每个样本的预测结果的前k个最大的数里面是否包含targets预测中的标签，一般都是取1，即取预测最大概率的索引与标签对比
+
 **函数使用的示例:**
 ```python
 import tensorflow as tf
