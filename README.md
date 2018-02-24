@@ -16,7 +16,7 @@
 |model_train.py|对模型进行训练(源代码)|
 |model_train.md|对模型训练代码的解释(markdown说明文件)|
 |employ.py|对模型的运用(源代码)|
-|employ.py|模型运用源代码解释(markdown说明文件)|
+|employ.md|模型运用源代码解释(markdown说明文件)|
 
 
 
