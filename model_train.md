@@ -24,20 +24,19 @@ capacity = 128   # 图片输入队列的大小
 save_step = 100  # 每隔多少次保存
 all_step = 300   # 训练多少次
 learning_rate = 0.0001  # 学习速率
-target_1 = 'hei'  # 存放分类图片的文件夹名,对应target_a
-target_2 = 'faces_other'  # 对于target_b
+target = ['shanxia', 'gonqi','zhushou','faces_other' ]  # 在此声明训练文件所在的文件夹
 dropout_half = tf.placeholder(tf.float32)  # 定义dropout值的类型
 dropout_quart = tf.placeholder(tf.float32)
 # 训练文件路径的声明 #
 train_files = 'E:/rootcoding/tensorflow/face_recognize/data'  # 训练样本的读入路径
-logs_train_dir = 'E:/models/model_2_11_2'  # logs,model存储路径
+logs_train_dir = 'E:/models/model_3_11'  # logs,model存储路径
 
 ```
 正如注释所说，此段代码是对，下面模型训练所用的变量和路径的声明，其中`target_1,target_2`变量要对应读入训练数据的文件夹名，而`train_files`必须要是训练数据存放文件夹的上级目录。因为一次性将要训练的几百张，几千张图片同时加载进内存进行训练对于我们非专业的训练设备是很麻烦的(性能,内存方面的不足)，所以我们是采取分批次训练的方式，一次加载进内存128张图片，其中64张为一批次，放入神经网络中进行训练，当前64张被取出时，后面会立马补上64张，使内存队列中始终能存在有128张。
 
 ```python
 # 训练文件的准备 #
-train, train_label = image_operate.get_files(train_files, target_1, target_2)
+train, train_label = image_operate.get_files(train_files, target)
 train_batch, train_label_batch = image_operate.get_batchs(train, train_label, img_w, img_h, batch_size, capacity)
 ```
 
