@@ -13,8 +13,7 @@ capacity = 128   # 图片输入队列的大小
 save_step = 100  # 每隔多少次保存
 all_step = 300   # 训练多少次
 learning_rate = 0.0001  # 学习速率
-target_1 = 'hei'  # 存放分类图片的文件夹名,对应target_a
-target_2 = 'faces_other'  # 对于target_b
+target = ['shanxia', 'gonqi','zhushou','faces_other' ]  # 在此声明训练文件文件夹
 dropout_half = tf.placeholder(tf.float32)  # 定义dropout值的类型
 dropout_quart = tf.placeholder(tf.float32)
 
@@ -23,7 +22,7 @@ train_files = 'E:/rootcoding/tensorflow/face_recognize/data'  # 训练样本的�
 logs_train_dir = 'E:/models/model_2_11_2'  # logs,model存储路径
 
 # 训练文件的准备 #
-train, train_label = image_operate.get_files(train_files, target_1, target_2)
+train, train_label = image_operate.get_files(train_files, target)
 train_batch, train_label_batch = image_operate.get_batchs(train, train_label, img_w, img_h, batch_size, capacity)
 
 # 训练操作的定义 #
