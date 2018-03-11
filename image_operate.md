@@ -11,30 +11,28 @@
     os
 ### 代码解析(`data_preparation.py`)
 ```python
-mfaces = []
-label_mfaces = []
-ofaces = []
-label_ofaces = []
-target_1 = 'hei'  # 存放分类图片的文件夹名,对应target_a
-target_2 = 'faces_other'  # target_b
+faces_image = []
+faces_label = []
 
 ```
-代码的含义是声明`mfaces,ofaces`为两个列表，用于存放图片地址信息，声明`label_mfaces,label_ofaces`两个列表用于存放图片的标签信息；在这里`label_mfaces`存放的标签为0，`label_ofaces`存放的标签为1，这四个列表都用于接下来的图片顺序打乱（**在一个批次的图片数据传入神经网络进行训练时，如果全部是某一类数据，而下一批次传入的是另一类数据，那么将可能会对神经网络中权重的生成产生影响**）。
+代码的含义是声明`faces_image,faces_label`为两个列表，分别用于存放图片地址信息和图片标签信息，标签列表中的数据是和图片列表中的图片地址相对应的，如果有三个类别，那么将会对照图片地址生成相对应的标签顺序如0、1,、0、2，两个列表将用于接下来的图片顺序打乱（**在一个批次的图片数据传入神经网络进行训练时，如果全部是某一类数据，而下一批次传入的是另一类数据，那么将可能会对神经网络训练产生影响**）。
 ```python
-def get_files(train_files, target_a, target_b):
-    for file in os.listdir(train_files + '/' + target_a):
-        mfaces.append(train_files + '/' + target_a + '/' + file)
-        label_mfaces.append(0)
-    for file in os.listdir(train_files + '/' + target_b):
-        ofaces.append(train_files + '/' + target_b + '/' + file)
-        label_ofaces.append(1)
-    return shuffle(mfaces, ofaces, label_mfaces, label_ofaces)
+def get_files(train_files, target=[]):
+    for i,f in enumerate(target):
+        faces_image.append([train_files + '/' + target[i] + '/' + file for file in os.listdir(train_files + '/' + target[i])])  # 直接用列表表达式创建列表文件数据
+        faces_label.append([i for c in os.listdir(train_files + '/' + target[i])])
+
+    return shuffle(faces_image, faces_label)
 ```
-代码定义了一个`get_files()`的函数，该函数的作用是遍历**train_files** + 目标文件夹**target_a,target_b** 组成的绝对路径下的所有文件，并将其添加到先前定义好的列表中，方便接下来的打乱；函数传入的三个参数 `train_files,target_a,target_b`分别是训练数据的绝对路径、目标数据文件夹一、目标数据文件夹二的意思，其中目标数据文件夹一定要和存放了将要用于训练的人脸数据相对应；函数返回是通过`shuffle()`函数打乱顺序的图片数据和图片标签,如果需要对更多目标的人脸数据进行识别，在上面声明更多的列表，并修改一下**get_files(),shuffle()**函数即可。
+代码定义了一个`get_files()`的函数，该函数的作用是遍历**train_files** + 目标文件夹**target** 列表中组成的绝对路径下的所有文件，并用列表表达式将其添加到先前定义好的列表中，方便接下来的打乱；函数传入的两个参数 `train_files,target`分别是训练数据的前一级绝对路径、包含目标图片数据文件夹名称的列表，其中图片数据一定要储存到相应的目标图片数据文件夹里；函数返回是通过`shuffle()`函数打乱顺序的图片数据和图片标签,如果需要对更多目标的人脸数据进行识别，在上面声明更多的列表，并修改一下**target**列表即可（注：列表中的目标文件夹名字需要对应训练数据的存放文件夹）。
 ```python
-def shuffle(list_1, list_2, label_1, label_2):
-    image_list = np.hstack((list_1, list_2))  # 将两个列表中的元素整合成一个列表
-    label_list = np.hstack((label_1, label_2))  # 同上
+def shuffle(image_data, label_data):
+    image_list = []
+    label_list = []
+    for i in image_data:  # 将所有图片地址文件列表合并
+        image_list = np.hstack((image_list, i))
+    for i in label_data:  # 将标签文件列表合并
+        label_list = np.hstack((label_list, i))
     temp = np.array([image_list, label_list])  # 将数据转换为二维矩阵
     temp = temp.transpose()  # 将二维矩阵进行转置
     np.random.shuffle(temp)  # 对数据进行随机打乱
@@ -46,7 +44,7 @@ def shuffle(list_1, list_2, label_1, label_2):
     tra_labels = [int(float(i)) for i in tra_labels]  # 将列表中的数字强制转换为int型(整形)
     return tra_images,tra_labels
 ```
-代码定义了一个可以将传入的四个列表进行组合打乱的函数，下面是打乱后的结果：
+代码定义了一个可以将传入的列表数据进行组合打乱的函数，下面是打乱后的结果（注：打乱只是打乱排列顺序，并不会打乱标签间的对应关系）：
 >['E:/rootcoding/tensorflow/face_recognize/data/faces_other/12.jpg', 'E:/rootcoding/tensorflow/face_recognize/data/hei/119.jpg', 'E:/rootcoding/tensorflow/face_recognize/data/faces_other/1236.jpg', 'E:/rootcoding/tensorflow/face_recognize/data/faces_other/590.jpg', 'E:/rootcoding/tensorflow/face_recognize/data/faces_other/819.jpg']
 [1, 0, 1, 1, 1]
 
