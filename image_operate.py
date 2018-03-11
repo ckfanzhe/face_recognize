@@ -3,17 +3,18 @@ import numpy as np
 import tensorflow as tf
 
 # 下面设置训练要用的分类类型
-mfaces = []
-label_mfaces = []
-ofaces = []
-label_ofaces = []
-target_1 = 'hei'  # 存放分类图片的文件夹名,对应target_a
-target_2 = 'faces_other'  # target_b
+
+faces_image = []
+faces_label = []
 
 # 对文件进行打乱 #
-def shuffle(list_1, list_2, label_1, label_2):
-    image_list = np.hstack((list_1, list_2))  # 将两个列表中的元素整合成一个列表
-    label_list = np.hstack((label_1, label_2))  # 同上
+def shuffle(image_data, label_data):
+    image_list = []
+    label_list = []
+    for i in image_data:  # 将所有图片地址文件列表合并
+        image_list = np.hstack((image_list, i))
+    for i in label_data:  # 将标签文件列表合并
+        label_list = np.hstack((label_list, i))
     temp = np.array([image_list, label_list])  # 将数据转换为二维矩阵
     temp = temp.transpose()  # 将二维矩阵进行转置
     np.random.shuffle(temp)  # 对数据进行随机打乱
@@ -23,17 +24,16 @@ def shuffle(list_1, list_2, label_1, label_2):
     tra_images = all_image_list[0:n_sample]  # 取图片路径元素个数为前n_sample个
     tra_labels = all_label_list[0:n_sample]  # 取下标元素个数也为n_sample个
     tra_labels = [int(float(i)) for i in tra_labels]  # 将列表中的数字强制转换为int型(整形)
+    print(tra_images,tra_labels)
     return tra_images,tra_labels
 
-# 下面是获取文件名并将其导入上述声明的列表 #
-def get_files(train_files, target_a, target_b):
-    for file in os.listdir(train_files + '/' + target_a):
-        mfaces.append(train_files + '/' + target_a + '/' + file)
-        label_mfaces.append(0)
-    for file in os.listdir(train_files + '/' + target_b):
-        ofaces.append(train_files + '/' + target_b + '/' + file)
-        label_ofaces.append(1)
-    return shuffle(mfaces, ofaces, label_mfaces, label_ofaces)
+# 下面是获取文件名并将其导入上述声明的列表
+def get_files(train_files, target=[]):
+    for i,f in enumerate(target):
+        faces_image.append([train_files + '/' + target[i] + '/' + file for file in os.listdir(train_files + '/' + target[i])])  # 直接用列表表达式创建列表文件数据
+        faces_label.append([i for c in os.listdir(train_files + '/' + target[i])])
+
+    return shuffle(faces_image, faces_label)
 
 
 def get_batchs(image, label, image_w, image_h, batch_size, capacity):
@@ -64,3 +64,8 @@ def get_batchs(image, label, image_w, image_h, batch_size, capacity):
     image_batch = tf.cast(image_batch, tf.float32)
     print('Face_Image prepare successful!')
     return image_batch, label_batch
+
+if __name__ == '__main__':
+    train_files = 'E:/data'
+    target = ['hei','faces_other','shanxia']
+    get_files(train_files, target)
