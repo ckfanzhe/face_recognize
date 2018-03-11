@@ -24,7 +24,7 @@ def shuffle(image_data, label_data):
     tra_images = all_image_list[0:n_sample]  # 取图片路径元素个数为前n_sample个
     tra_labels = all_label_list[0:n_sample]  # 取下标元素个数也为n_sample个
     tra_labels = [int(float(i)) for i in tra_labels]  # 将列表中的数字强制转换为int型(整形)
-    print(tra_images,tra_labels)
+    print(tra_images,tra_labels)  # 测试代码，实际运行时可以删去
     return tra_images,tra_labels
 
 # 下面是获取文件名并将其导入上述声明的列表
@@ -65,7 +65,7 @@ def get_batchs(image, label, image_w, image_h, batch_size, capacity):
     print('Face_Image prepare successful!')
     return image_batch, label_batch
 
-if __name__ == '__main__':
+if __name__ == '__main__':  # 用于判断是程序是自己运行还是被调用，下面是对此脚本进行单独测试
     train_files = 'E:/data'
     target = ['hei','faces_other','shanxia']
     get_files(train_files, target)
