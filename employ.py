@@ -87,8 +87,8 @@ if __name__ == '__main__':
             dets = detector(gray_image, 1)
             if not len(dets):
                 cv2.imshow('No face ... Detecting...', img)
-                if cv2.waitKey(1) & 0xFF == ord('q'):  # 按q键退出
-                    sys.exit(0)
+                if cv2.waitKey(1) & 0xFF == ord('q'):  # 按q键退出当前任务
+                    ret+=1
             for i, d in enumerate(dets):
                 x1 = d.top() if d.top() > 0 else 0
                 y1 = d.bottom() if d.bottom() > 0 else 0
@@ -108,12 +108,12 @@ if __name__ == '__main__':
                     out.write(img)
                     cv2.imshow('frame', img)
                     if cv2.waitKey(1) & 0xFF == ord('q'):
-                        ret += 1
+                        ret += 1   # 按q键退出当前任务
 
                 else:
                     cv2.imshow('There have some face', img)
-                    if cv2.waitKey(1) & 0xFF == ord('q'):  # 按q键退出
-                        ret += 1 # 用于跳出本次循环
+                    if cv2.waitKey(1) & 0xFF == ord('q'):  # 按q键退出当前任务
+                        ret += 1
 
         out.release()
         cv2.destroyAllWindows()
